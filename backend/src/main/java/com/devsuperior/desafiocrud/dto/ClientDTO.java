@@ -1,15 +1,12 @@
-package com.devsuperior.desafiocrud.entity;
+package com.devsuperior.desafiocrud.dto;
 
-import javax.persistence.*;
+import com.devsuperior.desafiocrud.entity.Client;
+
 import java.io.Serializable;
 import java.time.Instant;
 
-@Entity
-@Table(name = "client")
-public class Client implements Serializable {
+public class ClientDTO implements Serializable {
     private static final Long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String cpf;
@@ -17,14 +14,22 @@ public class Client implements Serializable {
     private Instant birthDate;
     private Integer children;
 
-    public Client() {}
+    public ClientDTO() {}
 
-    public Client(String name, String cpf, Double icome, Instant birthDate, Integer children) {
+    public ClientDTO(String name, String cpf, Double income, Instant birthDate, Integer children) {
         this.name = name;
         this.cpf = cpf;
-        this.income = icome;
+        this.income = income;
         this.birthDate = birthDate;
         this.children = children;
+    }
+
+    public ClientDTO(Client client) {
+        this.name = client.getName();
+        this.cpf = client.getCpf();
+        this.income = client.getIncome();
+        this.birthDate = client.getBirthDate();
+        this.children = client.getChildren();
     }
 
     public Long getId() {
@@ -55,8 +60,8 @@ public class Client implements Serializable {
         return income;
     }
 
-    public void setIncome(Double income) {
-        this.income = income;
+    public void setIncome(Double icome) {
+        this.income = icome;
     }
 
     public Instant getBirthDate() {
