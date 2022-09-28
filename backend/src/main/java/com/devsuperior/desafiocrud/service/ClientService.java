@@ -3,8 +3,11 @@ package com.devsuperior.desafiocrud.service;
 import com.devsuperior.desafiocrud.dto.ClientDTO;
 import com.devsuperior.desafiocrud.entity.Client;
 import com.devsuperior.desafiocrud.repository.ClientRepository;
+import com.devsuperior.desafiocrud.service.exceptions.DataBaseException;
 import com.devsuperior.desafiocrud.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -45,5 +48,15 @@ public class ClientService {
         client.setIncome(clientDTO.getIncome());
         client.setBirthDate(clientDTO.getBirthDate());
         client.setChildren(clientDTO.getChildren());
+    }
+
+    public void deleteClient(Long id) {
+        try {
+            clientRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id not found: " + id);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DataBaseException("Integrity violation");
+        }
     }
 }
