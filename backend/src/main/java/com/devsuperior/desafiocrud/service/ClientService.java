@@ -30,4 +30,20 @@ public class ClientService {
         Client client = optionalClient.orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado."));
         return new ClientDTO(client);
     }
+
+    @Transactional
+    public ClientDTO createClient(ClientDTO clientDTO) {
+        Client client = new Client();
+        convertClientDtoToEntity(clientDTO, client);
+        client = clientRepository.save(client);
+        return new ClientDTO(client);
+    }
+
+    private void convertClientDtoToEntity(ClientDTO clientDTO, Client client) {
+        client.setName(clientDTO.getName());
+        client.setCpf(clientDTO.getCpf());
+        client.setIncome(clientDTO.getIncome());
+        client.setBirthDate(clientDTO.getBirthDate());
+        client.setChildren(clientDTO.getChildren());
+    }
 }
