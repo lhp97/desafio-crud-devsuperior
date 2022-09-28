@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -48,6 +49,20 @@ public class ClientService {
         client.setIncome(clientDTO.getIncome());
         client.setBirthDate(clientDTO.getBirthDate());
         client.setChildren(clientDTO.getChildren());
+    }
+
+    @Transactional
+    public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
+        Client client;
+        try {
+            client = clientRepository.getReferenceById(id);
+            convertClientDtoToEntity(clientDTO, client);
+            client = clientRepository.save(client);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found: " + id);
+        }
+
+        return new ClientDTO(client);
     }
 
     public void deleteClient(Long id) {
